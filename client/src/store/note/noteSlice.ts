@@ -49,7 +49,6 @@ const noteSlice = createSlice({
     });
     builder.addCase(createNote.fulfilled, (state, action) => {
       const newNote = action.payload;
-      console.log(newNote)
       state.notes = [...state.notes, newNote];
       state.stats = state.stats.map((stat) => stat.category === newNote.category ? { ...stat, active: stat.active + 1 } : stat);
     });
@@ -58,7 +57,7 @@ const noteSlice = createSlice({
       state.notes = updatedNotes;
       state.stats = updatedStats;
     });
-    
+
   }
 });
 

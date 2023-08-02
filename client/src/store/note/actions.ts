@@ -64,10 +64,11 @@ const deleteNote = createAsyncThunk(
   ActionType.REMOVE_NOTE,
   async (id: string, thunkApi) => {
     try {
-      const removedNote = await note.removeNote(id);
+      const { id: removedNoteId } = await note.removeNote(id);
       const { notes, stats } = thunkApi.getState() as { notes: INote[], stats: IStat[] };
-      const updatedNotes = removedNote ? notes.filter((note) => note.id !== removedNote.id) : notes;
-      const updatedStats = stats.map((stat) => stat.category === removedNote.category ? { ...stat, active: stat.active - 1 } : stat);
+      const removedNote = notes.find((note) => note.id === removedNoteId);
+      const updatedNotes = removedNoteId ? notes.filter((note) => note.id !== removedNoteId) : notes;
+      const updatedStats = stats.map((stat) => stat.category === removedNote?.category ? { ...stat, active: stat.active - 1 } : stat);
       return { updatedNotes, updatedStats };
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.message);
