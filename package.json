@@ -1,0 +1,13 @@
+{
+  "name": "radency_task3",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "install:server": "cd server && npm install",
+    "install:client": "cd client && npm install",
+    "start:server": "cd server && npm run start",
+    "start:client": "cd client && npm run start"
+  },
+  "author": "",
+  "license": "ISC"
+}
