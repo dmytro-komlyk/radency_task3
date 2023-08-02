@@ -8,11 +8,11 @@ import {
   useSelector as useReduxSelector,
   type TypedUseSelectorHook,
 } from 'react-redux';
-import { taskSlice } from './taskSlice';
+import { noteSlice } from './note/noteSlice';
 
 export const makeStore = () =>
   configureStore({
-    reducer: taskSlice.reducer,
+    reducer: noteSlice.reducer,
     devTools: true,
 });
 
