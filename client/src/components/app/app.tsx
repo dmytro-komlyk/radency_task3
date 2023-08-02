@@ -1,11 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
-import { Tasks } from '../tasks/tasks';
+import { Notes } from '../notes/notes';
 
 const App = () => {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Tasks />}/>
+        <Route path='/' element={<Notes />}/>
       </Routes>
     </>
   )

@@ -1,34 +1,34 @@
 import { useState } from 'react';
 import { Modal } from '../../../common/modal/modal';
 import { useSelector } from '../../../../store/store';
-import { selectTasksState } from '../../../../store/taskSlice';
+import { selectNotesState } from '../../../../store/note/noteSlice';
 import { getValidateForm } from '../../../../helpers/validate-helper';
 
-interface ITaskPreviewProps {
-  taskId: string | null,
-  onTasktAdd: (values: {}) => void,
-  onTaskEdit: (id: string, values: {}) => void,
-  onTaskPreviewToggle: (isShow: boolean) => void
+interface INotePreviewProps {
+  noteId: string | null,
+  onNoteAdd: (values: {}) => void,
+  onNoteEdit: (id: string, values: {}) => void,
+  onNotePreviewToggle: (isShow: boolean) => void
 }
 
-const TaskPreview = ({ taskId = null, onTasktAdd, onTaskEdit, onTaskPreviewToggle }: ITaskPreviewProps) => {
-  const tasks = useSelector(selectTasksState);
-  const previewTask = taskId ? tasks.find((task) => task.id === taskId) : { name: '', content: '', category: '' };
-  const initTaskState = {
-    name: previewTask!.name,
-    content: previewTask!.content,
-    category: previewTask!.category,
+const NotePreview = ({ noteId = null, onNoteAdd, onNoteEdit, onNotePreviewToggle }: INotePreviewProps) => {
+  const { notes } = useSelector(selectNotesState);
+  const previewNote = noteId ? notes.find((note) => note.id === noteId) : { name: '', content: '', category: '' };
+  const initNoteState = {
+    name: previewNote!.name,
+    content: previewNote!.content,
+    category: previewNote!.category,
   }
 
-  const [taskValues, setTaskValues] = useState(initTaskState);
+  const [noteValues, setNoteValues] = useState(initNoteState);
   const [errorsValues, setErrorsValues] = useState({ name: null, content: null, category: null });
   const [isSubmit, setIsSubmit] = useState(false);
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.target as HTMLInputElement;
 
-    setTaskValues({
-      ...taskValues,
+    setNoteValues({
+      ...noteValues,
       [name]: value,
     });
     setErrorsValues((state) => ({ ...state, [name]: null }))
@@ -37,21 +37,21 @@ const TaskPreview = ({ taskId = null, onTasktAdd, onTaskEdit, onTaskPreviewToggl
   const handleSubmit = (e: any) => {
     e.preventDefault();
     setIsSubmit(true);
-    const { isErrors, errors } = getValidateForm(taskValues);
+    const { isErrors, errors } = getValidateForm(noteValues);
     if (!isErrors) {
-      if (Boolean(taskId)) {
-        onTaskEdit(taskId as string, taskValues);
+      if (Boolean(noteId)) {
+        onNoteEdit(noteId as string, noteValues);
       } else {
-        onTasktAdd(taskValues)
+        onNoteAdd(noteValues)
       }
-      onTaskPreviewToggle(false);
+      onNotePreviewToggle(false);
     }
     setErrorsValues((state) => ({ ...state, ...errors }));
     setIsSubmit(false);
   }
 
   return (
-    <Modal title={taskId ? 'Edit Task' : 'Create Task'} onShow={onTaskPreviewToggle}>
+    <Modal title={noteId ? 'Edit Note' : 'Create Note'} onShow={onNotePreviewToggle}>
       <form className='flex flex-col gap-3' onSubmit={handleSubmit}>
         <div className='relative z-0 w-full mb-6 group'>
           <input
@@ -60,7 +60,7 @@ const TaskPreview = ({ taskId = null, onTasktAdd, onTaskEdit, onTaskPreviewToggl
             id='name'
             className={`${Boolean(errorsValues.name) ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-slate-900'} block py-2.5 px-0 w-full text-sm text-gray-700 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 peer`}
             placeholder=' '
-            value={taskValues.name}
+            value={noteValues.name}
             onChange={handleChange}
             required
           />
@@ -74,7 +74,7 @@ const TaskPreview = ({ taskId = null, onTasktAdd, onTaskEdit, onTaskPreviewToggl
             id='content'
             className={`${Boolean(errorsValues.content) ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-slate-900'} block py-2.5 px-0 w-full text-sm text-gray-700 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 peer`}
             placeholder=' '
-            value={taskValues.content}
+            value={noteValues.content}
             onChange={handleChange}
             required
           />
@@ -90,7 +90,7 @@ const TaskPreview = ({ taskId = null, onTasktAdd, onTaskEdit, onTaskPreviewToggl
                 id='category1'
                 name='category'
                 value='Task'
-                checked={taskValues.category === 'Task'}
+                checked={noteValues.category === 'Task'}
                 onChange={handleChange}
                 required
               />
@@ -102,7 +102,7 @@ const TaskPreview = ({ taskId = null, onTasktAdd, onTaskEdit, onTaskPreviewToggl
                 id='category2'
                 name='category'
                 value='Random Thought'
-                checked={taskValues.category === 'Random Thought'}
+                checked={noteValues.category === 'Random Thought'}
                 onChange={handleChange} />
               <label htmlFor='category2'>Random Thought</label>
             </div>
@@ -112,7 +112,7 @@ const TaskPreview = ({ taskId = null, onTasktAdd, onTaskEdit, onTaskPreviewToggl
                 id='category3'
                 name='category'
                 value='Idea'
-                checked={taskValues.category === 'Idea'}
+                checked={noteValues.category === 'Idea'}
                 onChange={handleChange}
               />
               <label htmlFor='category3'>Idea</label>
@@ -123,7 +123,7 @@ const TaskPreview = ({ taskId = null, onTasktAdd, onTaskEdit, onTaskPreviewToggl
                 id='category4'
                 name='category'
                 value='Quote'
-                checked={taskValues.category === 'Quote'}
+                checked={noteValues.category === 'Quote'}
                 onChange={handleChange}
               />
               <label htmlFor='category4'>Quote</label>
@@ -135,11 +135,11 @@ const TaskPreview = ({ taskId = null, onTasktAdd, onTaskEdit, onTaskPreviewToggl
           className='w-[50%] ml-auto text-white bg-slate-500 hover:bg-slate-300 hover:text-slate-950 focus:ring-4 focus:outline-none focus:ring-slate-300 font-medium rounded-lg text-sm sm:w-auto px-5 py-2.5 text-center'
           disabled={isSubmit}
         >
-          {taskId ? 'Save' : 'Submit'}
+          {noteId ? 'Save' : 'Submit'}
         </button>
       </form>
     </Modal>
   )
 }
 
-export { TaskPreview };
+export { NotePreview };
